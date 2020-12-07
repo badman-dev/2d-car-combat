@@ -6,6 +6,9 @@ public class tireSound : MonoBehaviour
 {
     public AudioSource screech;
     public bool onRoad;
+
+    Vector3 lastPosition = Vector3.zero;
+    float speed;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +18,9 @@ public class tireSound : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (onRoad && Input.GetKey(KeyCode.Space)) {
+        
+        Debug.Log(speed);
+        if (onRoad && Input.GetKey(KeyCode.Space) && (speed > .01 || Input.GetKey(KeyCode.W))) {
             if (!screech.isPlaying) {
                 screech.Play();
                 gameObject.transform.GetChild(0).gameObject.GetComponent<TrailRenderer>().emitting = true;
@@ -27,5 +32,11 @@ public class tireSound : MonoBehaviour
             gameObject.transform.GetChild(0).gameObject.GetComponent<TrailRenderer>().emitting = false;
         }
         
+    }
+    
+    void FixedUpdate()
+    {
+        speed = (transform.parent.gameObject.transform.position - lastPosition).magnitude;
+        lastPosition = transform.parent.gameObject.transform.position;
     }
 }
